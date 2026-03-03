@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IrisCull — Keyboard-First Photo Culling for Mac</title>
+  <meta name="description" content="IrisCull is a local-first, keyboard-driven photo culling app for macOS. Review photos faster without breaking your focus.">
+  <link rel="icon" type="image/png" href="images/app-icon.png">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --surface-hover: #1a1a1a;
+      --border: #222;
+      --text: #e8e8e8;
+      --text-secondary: #888;
+      --accent: #c4a35a;
+      --accent-dim: rgba(196, 163, 90, 0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px 60px;
+      position: relative;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: linear-gradient(transparent, var(--bg));
+      pointer-events: none;
+    }
+
+    .app-icon {
+      width: 96px;
+      height: 96px;
+      border-radius: 22px;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    .hero h1 {
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #fff 0%, #c4a35a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero .tagline {
+      font-size: 22px;
+      color: var(--text-secondary);
+      font-weight: 400;
+      margin-bottom: 40px;
+      max-width: 520px;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      background: #fff;
+      color: #000;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-bottom: 12px;
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255,255,255,0.15);
+    }
+
+    .hero-cta svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .hero-price {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 60px;
+    }
+
+    .hero-screenshot {
+      width: 100%;
+      max-width: 1100px;
+      border-radius: 12px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+    }
+
+    /* Sections */
+    section {
+      padding: 100px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 600px;
+      line-height: 1.6;
+      margin-bottom: 56px;
+    }
+
+    /* Keyboard Shortcuts */
+    .shortcuts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .shortcut-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .shortcut-key {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 48px;
+      height: 48px;
+      padding: 0 16px;
+      background: var(--bg);
+      border: 1px solid #333;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #fff;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .shortcut-action {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Features */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+    }
+
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 16px;
+      display: block;
+      width: 56px;
+      height: 56px;
+      line-height: 56px;
+      text-align: center;
+      background: var(--accent-dim);
+      border-radius: 14px;
+    }
+
+    .feature-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Themes Gallery */
+    .themes-scroll {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .theme-card {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .theme-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+
+    .theme-card img {
+      width: 100%;
+      display: block;
+    }
+
+    .theme-card .theme-name {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 16px 14px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .theme-card .theme-name span {
+      font-weight: 400;
+      color: var(--text-secondary);
+      font-size: 12px;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* Privacy */
+    .privacy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .privacy-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 24px;
+      text-align: center;
+    }
+
+    .privacy-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .privacy-item h3 {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .privacy-item p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* Screenshot pair */
+    .screenshot-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 48px;
+    }
+
+    .screenshot-pair img {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .screenshot-full {
+      margin-top: 48px;
+    }
+
+    .screenshot-full img {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 12px 48px rgba(0,0,0,0.4);
+    }
+
+    /* CTA */
+    .cta-section {
+      text-align: center;
+      padding: 120px 24px;
+    }
+
+    .cta-section h2 {
+      font-size: 44px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+
+    .cta-section p {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    footer a:hover { color: var(--text); }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 16px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 36px; }
+      .hero .tagline { font-size: 18px; }
+      .section-title { font-size: 28px; }
+      .themes-scroll { grid-template-columns: 1fr; }
+      .screenshot-pair { grid-template-columns: 1fr; }
+      .shortcuts-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <section class="hero">
+    <img src="images/app-icon.png" alt="IrisCull app icon" class="app-icon">
+    <h1>IrisCull</h1>
+    <p class="tagline">Review photos faster &mdash; without breaking your focus.</p>
+    <a href="#" class="hero-cta">
+      <svg viewBox="0 0 496.255 608.728" fill="currentColor"><path d="M273.81 52.973C313.806.257 369.41 0 369.41 0s8.271 49.562-31.463 97.306c-42.426 50.98-90.649 42.638-90.649 42.638s-9.055-40.094 26.512-86.971zM252.385 174.662c20.576 0 58.764-28.284 108.471-28.284 85.562 0 119.222 60.883 119.222 60.883s-65.833 33.659-65.833 115.331c0 92.133 82.01 123.885 82.01 123.885s-57.328 161.357-134.628 161.357c-35.565 0-63.215-23.967-100.688-23.967-38.188 0-76.084 24.861-100.766 24.861C89.33 608.73 0 455.666 0 332.628c0-121.052 75.612-184.554 146.533-184.554 46.105 0 81.883 26.588 105.852 26.588z"/></svg>
+      Download on the Mac App Store
+    </a>
+    <p class="hero-price">$9.99 &middot; One-time purchase &middot; macOS 14+</p>
+    <img src="images/hero-cinema-full.png" alt="IrisCull Cinema theme showing photo review" class="hero-screenshot">
+  </section>
+
+  <!-- Keyboard Shortcuts -->
+  <section>
+    <p class="section-label">Built for Speed</p>
+    <h2 class="section-title">Your keyboard does the work.</h2>
+    <p class="section-subtitle">No menus, no drag-and-drop. Just arrow keys and instant decisions. Open a folder, and start reviewing.</p>
+    <div class="shortcuts-grid">
+      <div class="shortcut-card">
+        <div class="shortcut-key">&rarr;</div>
+        <div class="shortcut-action">Keep</div>
+      </div>
+      <div class="shortcut-card">
+        <div class="shortcut-key">&larr;</div>
+        <div class="shortcut-action">Reject</div>
+      </div>
+      <div class="shortcut-card">
+        <div class="shortcut-key">&darr;</div>
+        <div class="shortcut-action">Undecided</div>
+      </div>
+      <div class="shortcut-card">
+        <div class="shortcut-key">1 2 3</div>
+        <div class="shortcut-action">Rate favorites</div>
+      </div>
+      <div class="shortcut-card">
+        <div class="shortcut-key">&lcub;Z</div>
+        <div class="shortcut-action">Undo</div>
+      </div>
+      <div class="shortcut-card">
+        <div class="shortcut-key">Space</div>
+        <div class="shortcut-action">Toggle sidebar</div>
+      </div>
+    </div>
+    <div class="screenshot-full">
+      <img src="images/hero-cinema.png" alt="Cinema theme immersive view" loading="lazy">
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section>
+    <p class="section-label">Features</p>
+    <h2 class="section-title">Everything you need. Nothing you don't.</h2>
+    <p class="section-subtitle">IrisCull focuses on one thing &mdash; making photo decisions fast. No editing tools, no cloud sync, no complexity.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feature-icon">&#9881;</span>
+        <h3>Two Review Modes</h3>
+        <p>Review Mode for rapid decisions with auto-advance. Inspect Mode for browsing filtered subsets without changing your choices.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">&#128269;</span>
+        <h3>Full EXIF Metadata</h3>
+        <p>Camera, lens, exposure, ISO, focal length, GPS coordinates, file dimensions &mdash; all visible in a dedicated panel.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">&#128230;</span>
+        <h3>Export &amp; Trash</h3>
+        <p>Export kept photos or favorites as copies or aliases. Batch move rejected photos to Trash with one click.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">&#128190;</span>
+        <h3>Session Persistence</h3>
+        <p>Your progress saves automatically. Close the app, come back later, and pick up right where you left off.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">&#11088;</span>
+        <h3>Preference Ratings</h3>
+        <p>Rate photos 1&ndash;3 independent from keep/reject decisions. Find your favorites across any category.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">&#128247;</span>
+        <h3>Wide Format Support</h3>
+        <p>JPG, PNG, HEIC, TIFF, WEBP, and more. Works with whatever your camera shoots.</p>
+      </div>
+    </div>
+    <div class="screenshot-pair">
+      <img src="images/theme-polaroid-review.png" alt="Polaroid theme with EXIF panel" loading="lazy">
+      <img src="images/theme-film.png" alt="Film theme with analog slide mount" loading="lazy">
+    </div>
+  </section>
+
+  <!-- Themes -->
+  <section>
+    <p class="section-label">12 Premium Themes</p>
+    <h2 class="section-title">Make it yours.</h2>
+    <p class="section-subtitle">2 themes included free. 12 more available as individual purchases at $4.99 each. Every theme transforms the entire interface.</p>
+    <div class="themes-scroll">
+      <div class="theme-card">
+        <img src="images/theme-cinema.png" alt="Cinema theme" loading="lazy">
+        <div class="theme-name">Cinema<span>Immersive dark with floating controls</span></div>
+      </div>
+      <div class="theme-card">
+        <img src="images/theme-cyberpunk-full.png" alt="Cyberpunk theme" loading="lazy">
+        <div class="theme-name">Cyberpunk<span>Neon HUD with glowing accents</span></div>
+      </div>
+      <div class="theme-card">
+        <img src="images/theme-polaroid-full.png" alt="Polaroid theme" loading="lazy">
+        <div class="theme-name">Polaroid<span>Instant-camera nostalgia</span></div>
+      </div>
+      <div class="theme-card">
+        <img src="images/theme-botanical.png" alt="Botanical theme" loading="lazy">
+        <div class="theme-name">Botanical<span>Organic cream-and-green palette</span></div>
+      </div>
+      <div class="theme-card">
+        <img src="images/theme-dopamine.png" alt="Dopamine theme" loading="lazy">
+        <div class="theme-name">Dopamine<span>Bold Gen Z maximalism</span></div>
+      </div>
+      <div class="theme-card">
+        <img src="images/theme-retrogame.png" alt="RetroGame theme" loading="lazy">
+        <div class="theme-name">Retro Game<span>CRT terminal with scanlines</span></div>
+      </div>
+      <div class="theme-card">
+        <img src="images/theme-editorial.png" alt="Editorial theme" loading="lazy">
+        <div class="theme-name">Editorial<span>High-fashion magazine typography</span></div>
+      </div>
+      <div class="theme-card">
+        <img src="images/theme-memphis.png" alt="Memphis theme" loading="lazy">
+        <div class="theme-name">Memphis<span>Bold geometric pop art</span></div>
+      </div>
+      <div class="theme-card">
+        <img src="images/theme-rose.png" alt="Ros&eacute; theme" loading="lazy">
+        <div class="theme-name">Ros&eacute;<span>Elegant rose-gold luxury</span></div>
+      </div>
+      <div class="theme-card">
+        <img src="images/theme-film.png" alt="Film theme" loading="lazy">
+        <div class="theme-name">Film<span>Analog light table with slide mounts</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Privacy -->
+  <section>
+    <p class="section-label">Private by Design</p>
+    <h2 class="section-title">Your photos never leave your Mac.</h2>
+    <p class="section-subtitle">IrisCull works entirely offline. No accounts, no uploads, no tracking, no telemetry.</p>
+    <div class="privacy-grid">
+      <div class="privacy-item">
+        <div class="privacy-icon">&#128274;</div>
+        <h3>Fully Offline</h3>
+        <p>All processing happens locally on your machine.</p>
+      </div>
+      <div class="privacy-item">
+        <div class="privacy-icon">&#128683;</div>
+        <h3>No Account Required</h3>
+        <p>Open the app and start immediately. Zero setup.</p>
+      </div>
+      <div class="privacy-item">
+        <div class="privacy-icon">&#128065;&#8205;&#128488;</div>
+        <h3>No Tracking</h3>
+        <p>No analytics. No telemetry. No data collection.</p>
+      </div>
+      <div class="privacy-item">
+        <div class="privacy-icon">&#9729;&#65039;</div>
+        <h3>No Cloud</h3>
+        <p>Network only used for App Store purchase verification.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Cull at the speed of thought.</h2>
+    <p>Available now on the Mac App Store.</p>
+    <a href="#" class="hero-cta">
+      <svg viewBox="0 0 496.255 608.728" fill="currentColor" style="width:20px;height:20px"><path d="M273.81 52.973C313.806.257 369.41 0 369.41 0s8.271 49.562-31.463 97.306c-42.426 50.98-90.649 42.638-90.649 42.638s-9.055-40.094 26.512-86.971zM252.385 174.662c20.576 0 58.764-28.284 108.471-28.284 85.562 0 119.222 60.883 119.222 60.883s-65.833 33.659-65.833 115.331c0 92.133 82.01 123.885 82.01 123.885s-57.328 161.357-134.628 161.357c-35.565 0-63.215-23.967-100.688-23.967-38.188 0-76.084 24.861-100.766 24.861C89.33 608.73 0 455.666 0 332.628c0-121.052 75.612-184.554 146.533-184.554 46.105 0 81.883 26.588 105.852 26.588z"/></svg>
+      Download on the Mac App Store
+    </a>
+    <p class="hero-price">$9.99 &middot; One-time purchase &middot; macOS 14+</p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-links">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="support.html">Support</a>
+    </div>
+    <p>&copy; 2026 Viis Labs. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

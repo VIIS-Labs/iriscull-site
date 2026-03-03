@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support — IrisCull</title>
+  <meta name="description" content="Get help with IrisCull. Keyboard shortcuts, troubleshooting, and contact.">
+  <link rel="icon" type="image/png" href="images/app-icon.png">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --border: #222;
+      --text: #e8e8e8;
+      --text-secondary: #888;
+      --accent: #c4a35a;
+      --accent-dim: rgba(196, 163, 90, 0.15);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 80px 24px 120px;
+    }
+    .back {
+      display: inline-block;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 48px;
+    }
+    .back:hover { text-decoration: underline; }
+    h1 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 56px;
+    }
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-top: 48px;
+      margin-bottom: 16px;
+    }
+    p, li {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+    a { color: var(--accent); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+    }
+    th, td {
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px;
+    }
+    th {
+      color: var(--text);
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    td { color: var(--text-secondary); }
+    td:first-child {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .contact-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      margin-top: 24px;
+      text-align: center;
+    }
+    .contact-card h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .contact-card p {
+      margin-bottom: 20px;
+    }
+    .contact-link {
+      display: inline-block;
+      padding: 12px 28px;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      transition: background 0.2s;
+    }
+    .contact-link:hover {
+      background: rgba(196, 163, 90, 0.25);
+    }
+    .faq-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 12px;
+    }
+    .faq-item h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .faq-item p {
+      font-size: 15px;
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="back">&larr; Back to IrisCull</a>
+    <h1>Support</h1>
+    <p class="subtitle">Everything you need to get started with IrisCull.</p>
+
+    <h2>Keyboard Shortcuts</h2>
+    <table>
+      <thead>
+        <tr><th>Key</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>&rarr;</td><td>Keep photo &amp; advance</td></tr>
+        <tr><td>&larr;</td><td>Reject photo &amp; advance</td></tr>
+        <tr><td>&darr;</td><td>Mark as undecided &amp; advance</td></tr>
+        <tr><td>1 / 2 / 3</td><td>Rate photo (preference rating)</td></tr>
+        <tr><td>&lcub;Z</td><td>Undo last decision</td></tr>
+        <tr><td>Space</td><td>Toggle sidebar</td></tr>
+        <tr><td>E</td><td>Toggle EXIF metadata panel</td></tr>
+        <tr><td>&lcub;O</td><td>Open folder</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <h3>What photo formats are supported?</h3>
+      <p>IrisCull supports JPG, JPEG, PNG, HEIC, HEIF, TIFF, WEBP, BMP, and GIF.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Where is my session data stored?</h3>
+      <p>Session data is saved locally at <code>~/Library/Application Support/IrisCull/sessions/</code>. It persists across app launches so you can resume any review.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Does IrisCull modify my original photos?</h3>
+      <p>No. IrisCull never modifies, moves, or deletes your original files during review. Export creates copies or aliases, and Trash requires explicit confirmation.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>How do I restore purchased themes?</h3>
+      <p>Open the theme picker in the sidebar, select a locked theme, and tap "Restore Purchases" on the paywall sheet. This will restore any themes previously purchased with your Apple ID.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>What's the difference between Review and Inspect mode?</h3>
+      <p><strong>Review Mode</strong> (orange banner): Arrow keys make decisions and auto-advance to the next photo. <strong>Inspect Mode</strong> (green banner): Arrow keys navigate without changing decisions, useful for browsing a filtered subset.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Does IrisCull require an internet connection?</h3>
+      <p>No. All core features work fully offline. Network is only used for App Store purchase/restore flows.</p>
+    </div>
+
+    <h2>Contact</h2>
+    <div class="contact-card">
+      <h3>Need more help?</h3>
+      <p>Send us an email and we'll get back to you as soon as possible.</p>
+      <a href="mailto:support@viislabs.app" class="contact-link">support@viislabs.app</a>
+    </div>
+  </div>
+</body>
+</html>
